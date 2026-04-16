@@ -20,16 +20,30 @@ export async function POST() {
     $('tr').each((_, element) => {
       const cols = $(element).find('td');
 
-      if (cols.length >= 4) {
+      if (cols.length >= 5) {
+        const allCols = $(element)
+          .find('td')
+          .map((i, el) => $(el).text().trim())
+          .get();
+
         const target_hour = $(cols[0]).text().trim();
         if (target_hour.includes('時刻')) return;
+
         const temperature = $(cols[1]).text().trim();
         const wind_speed = $(cols[2]).text().trim();
-        const precipitation = $(cols[3]).text().trim();
+        const precipitation = $(cols[4]).text().trim();
+
+        console.log('1行分の列データ:', allCols);
+        console.log('保存する値:', {
+          target_hour,
+          temperature,
+          wind_speed,
+          precipitation,
+        });
 
         if (target_hour && temperature && wind_speed && precipitation) {
           rows.push({
-            area_name: '東京都港区',
+            area_name: '東京都豊島区',
             target_hour,
             temperature,
             wind_speed,
