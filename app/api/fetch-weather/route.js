@@ -32,14 +32,7 @@ export async function POST() {
         const temperature = $(cols[1]).text().trim();
         const wind_speed = $(cols[2]).text().trim();
         const precipitation = $(cols[4]).text().trim();
-
-        console.log('1行分の列データ:', allCols);
-        console.log('保存する値:', {
-          target_hour,
-          temperature,
-          wind_speed,
-          precipitation,
-        });
+        
 
         if (target_hour && temperature && wind_speed && precipitation) {
           rows.push({
