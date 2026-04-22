@@ -9,20 +9,6 @@ function toJstDateString(date = new Date()) {
   return `${y}-${m}-${d}`;
 }
 
-function addDays(dateStr, days) {
-  const base = new Date(`${dateStr}T00:00:00`);
-  base.setDate(base.getDate() + days);
-  const y = base.getFullYear();
-  const m = String(base.getMonth() + 1).padStart(2, '0');
-  const d = String(base.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
-function parseHour(targetHour) {
-  const match = targetHour.match(/^(\d{1,2})時$/);
-  return match ? Number(match[1]) : null;
-}
-
 export async function GET() {
   return handleFetchWeather();
 }
@@ -48,34 +34,25 @@ async function handleFetchWeather() {
 
     const rows = [];
     const baseDate = toJstDateString();
-    let dayOffset = 0;
-    let prevHour = null;
 
     $('tr').each((_, element) => {
       const cols = $(element).find('td');
 
+      // 列数が足りない行は無視
       if (cols.length < 5) return;
 
       const target_hour = $(cols[0]).text().trim();
 
-      // 見出し行を除外
+      // 見出し行や「○時」以外の行を除外
       if (target_hour.includes('時刻')) return;
       if (!target_hour.match(/^\d{1,2}時$/)) return;
 
       const temperature = $(cols[1]).text().trim();
       const wind_speed = $(cols[2]).text().trim();
-      const precipitation = $(cols[4]).text().trim(); // 風向を飛ばす
+      const precipitation = $(cols[4]).text().trim(); // 風向(cols[3])を飛ばす
 
-      const hourNum = parseHour(target_hour);
-      if (hourNum === null) return;
-
-      // 23時 → 0時台に切り替わったら翌日
-      if (prevHour !== null && hourNum < prevHour) {
-        dayOffset += 1;
-      }
-      prevHour = hourNum;
-
-      const target_date = addDays(baseDate, dayOffset);
+      // 今回は取得日で固定
+      const target_date = baseDate;
 
       rows.push({
         area_name: areaName,
@@ -90,7 +67,10 @@ async function handleFetchWeather() {
 
     if (rows.length === 0) {
       return Response.json(
-        { success: false, error: '天気データを取得できませんでした。HTML構造を確認してください。' },
+        {
+          success: false,
+          error: '天気データを取得できませんでした。HTML構造を確認してください。',
+        },
         { status: 500 }
       );
     }
