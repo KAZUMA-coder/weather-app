@@ -38,20 +38,18 @@ async function handleFetchWeather() {
     $('tr').each((_, element) => {
       const cols = $(element).find('td');
 
-      // 列数が足りない行は無視
       if (cols.length < 5) return;
 
       const target_hour = $(cols[0]).text().trim();
 
-      // 見出し行や「○時」以外の行を除外
+      // 見出し行や時刻形式でない行は除外
       if (target_hour.includes('時刻')) return;
       if (!target_hour.match(/^\d{1,2}時$/)) return;
 
       const temperature = $(cols[1]).text().trim();
       const wind_speed = $(cols[2]).text().trim();
-      const precipitation = $(cols[4]).text().trim(); // 風向(cols[3])を飛ばす
+      const precipitation = $(cols[4]).text().trim(); // 風向(cols[3])は飛ばす
 
-      // 今回は取得日で固定
       const target_date = baseDate;
 
       rows.push({
