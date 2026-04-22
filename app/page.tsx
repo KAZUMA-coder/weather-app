@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 type WeatherRecord = {
   id: number;
+  target_date: string;
   target_hour: string;
   temperature: string;
   wind_speed: string;
@@ -67,7 +68,7 @@ export default function Home() {
       <section style={styles.hero}>
         <h1 style={styles.title}>天気データ保存サイト</h1>
         <p style={styles.subtitle}>
-          東京都豊島区の1時間ごとの気温・風速・降水量を取得し、
+          東京都豊島区の1時間ごとの日付・時刻・気温・風速・降水量を取得し、
           データベースに保存して一覧表示するサイトです。
         </p>
       </section>
@@ -106,6 +107,7 @@ export default function Home() {
           <table style={styles.table}>
             <thead>
               <tr>
+                <th style={styles.th}>日付</th>
                 <th style={styles.th}>時刻</th>
                 <th style={styles.th}>気温 (℃)</th>
                 <th style={styles.th}>風速 (m/s)</th>
@@ -117,6 +119,7 @@ export default function Home() {
               {latest23Records.length > 0 ? (
                 latest23Records.map((record) => (
                   <tr key={record.id}>
+                    <td style={styles.td}>{record.target_date}</td>
                     <td style={styles.td}>{record.target_hour}</td>
                     <td style={styles.td}>{record.temperature}</td>
                     <td style={styles.td}>{record.wind_speed}</td>
@@ -128,7 +131,7 @@ export default function Home() {
                 ))
               ) : (
                 <tr>
-                  <td style={styles.emptyTd} colSpan={5}>
+                  <td style={styles.emptyTd} colSpan={6}>
                     まだデータがありません
                   </td>
                 </tr>
@@ -148,6 +151,7 @@ export default function Home() {
           <table style={styles.table}>
             <thead>
               <tr>
+                <th style={styles.th}>日付</th>
                 <th style={styles.th}>時刻</th>
                 <th style={styles.th}>気温 (℃)</th>
                 <th style={styles.th}>風速 (m/s)</th>
@@ -159,6 +163,7 @@ export default function Home() {
               {latest100Records.length > 0 ? (
                 latest100Records.map((record) => (
                   <tr key={record.id}>
+                    <td style={styles.td}>{record.target_date}</td>
                     <td style={styles.td}>{record.target_hour}</td>
                     <td style={styles.td}>{record.temperature}</td>
                     <td style={styles.td}>{record.wind_speed}</td>
@@ -170,7 +175,7 @@ export default function Home() {
                 ))
               ) : (
                 <tr>
-                  <td style={styles.emptyTd} colSpan={5}>
+                  <td style={styles.emptyTd} colSpan={6}>
                     まだデータがありません
                   </td>
                 </tr>
@@ -288,7 +293,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    minWidth: '760px',
+    minWidth: '900px',
   },
   th: {
     textAlign: 'left',
